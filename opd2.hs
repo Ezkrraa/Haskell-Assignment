@@ -1,3 +1,5 @@
+import Control.Monad.RWS.Class (MonadState (put))
+import Data.Char (chr, ord)
 import Data.List (find)
 import Data.Maybe (fromJust)
 
@@ -144,12 +146,83 @@ rsaDecrypt cipher (d, m) = (cipher ^ d) `mod` m
 -- conversie van een letter naar een ascii waarde en vice versa zijn twee handige
 -- functies beschikbaar, te vinden in de bibliotheek Data.Char:
 --  ord
+charToInt :: Char -> Integer
+charToInt c = toInteger (ord c)
+
+-- Encrypt single character
+encryptLetter :: Char -> (Integer, Integer) -> Integer
+encryptLetter letter (e, m) =
+  let asciiVal = charToInt letter
+   in rsaEncrypt asciiVal (e, m)
+
+encryptMessage :: String -> (Integer, Integer) -> [Integer]
+encryptMessage message (e, m) = map (`encryptLetter` (e, m)) message
+
 --  chr
+intToChar :: Integer -> Char
+intToChar i = chr (fromInteger i)
+
+-- Decrypt single character (letter )
+decryptLetter :: Integer -> (Integer, Integer) -> Char
+decryptLetter encryptedLetter (d, m) =
+  let decryptedAscii = rsaDecrypt encryptedLetter (d, m)
+   in intToChar decryptedAscii
+
+decryptMessage :: [Integer] -> (Integer, Integer) -> String
+decryptMessage message (d, m) = map (`decryptLetter` (d, m)) message
+
 -- Oefen met beide functies.
+
+-- hier staat de sicke test
+epictest :: IO ()
+epictest = do
+  let publicKey = (17, 3233)
+      privateKey = (2753, 3233)
+      wronkPrivateKey = (2754, 3233)
+      inputLetter = 'G'
+      encryptedLetter = encryptLetter inputLetter publicKey
+
+  putStrLn $ "Encrypted letter: " ++ show inputLetter
+  putStrLn $ "Encrypted letter as number: " ++ show encryptedLetter
+  putStrLn $ "Decrypted letter: " ++ [decryptLetter encryptedLetter privateKey]
+  putStrLn $ "Decrypted letter: " ++ [decryptLetter encryptedLetter wronkPrivateKey]
+
 -- Opdracht 5
 -- Alice en Bob willen veilig met elkaar communiceren. Echter: een bericht dat
 -- door Alice met haar priv´e sleutel werd versleuteld, kan door iedereen met de
 -- publieke sleutel worden ontsleuteld. Hoe kun je rsa gebruiken om Alice en Bob
 -- toch veilig met elkaar te laten communiceren?
+
+-- Door gebruik te maken van Symmetrische Sleutel Encryptie. Wanner de verzender een bericht wilt versturen
+-- naar de ontvanger, wordt er een willekeurige sleutel gegenereerd. Deze sleutel wordt gebruikt om het bericht
+-- te versleutelen. De sleutel wordt vervolgens versleuteld met de publieke sleutel van de ontvanger en meegestuurd
+-- met het bericht. De ontvanger kan de versleutelde sleutel ontsleutelen met zijn prive sleutel en vervolgens het
+-- bericht ontsleutelen met de verkregen sleutel.
+-- In c# zou dit gedaan kunnen worden met de cryptography library met Fernet
+
+-- Moeten we hier een implementatie van maken?
+
 -- Opdracht 6 (facultatief )
 -- Simuleer een man in the middle attack
+notSoEpicAttack :: IO ()
+notSoEpicAttack = do
+  let alicePublicKey = (17, 3233)
+      bobPublicKey = (17, 3233)
+      bobPrivateKey = (2753, 3233)
+      evePublicKey = (17, 3233)
+      evePrivateKey = (2753, 3233)
+
+      message = "Hoi daar bobbertje van mij xxx"
+      encryptedMessage = encryptMessage message alicePublicKey
+
+      eveStolenMessage = decryptMessage encryptedMessage evePrivateKey
+      eveChangedMessage = "Hahaha ik ben een hackert"
+      eveEncryptedChangedMessage = encryptMessage eveChangedMessage bobPublicKey
+
+      -- Corrected: Bob should use his private key to decrypt the message
+      bobReadAndChangedMessage = decryptMessage eveEncryptedChangedMessage bobPrivateKey
+
+  putStrLn $ "Alice sends: " ++ message
+  putStrLn $ "Eve reads: " ++ eveStolenMessage
+  putStrLn $ "Eve sends: " ++ eveChangedMessage
+  putStrLn $ "Bob reads: " ++ bobReadAndChangedMessage
