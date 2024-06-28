@@ -1,3 +1,5 @@
+import Data.List
+
 -- INFADP01-D Practicumopdracht 3
 -- W. Oele
 -- 19 april 2024
@@ -50,8 +52,13 @@ testintegreer = do
 -- opgezocht in de hackage database m.b.v. een daarvoor geschikte zoekmachine
 -- zoals http://www.haskell.org/hoogle/.
 -- Schrijf de functie:
--- dubbelen::[a]->[a]
--- dubbelen s
+dubbelen :: (Eq a) => [a] -> [a]
+dubbelen s = nub [x | x <- s, length (filter (== x) s) > 1]
+
+testdubbelen :: IO ()
+testdubbelen = do
+  print $ dubbelen "aabbbcdeeeef"
+
 -- Deze functie heeft een lijst als invoer en levert als uitvoer een lijst met uitsluitend
 -- die elementen die meer dan een keer voorkomen in de lijst. Voorbeeld:
 -- ghci>dubbelen "aabbbcdeeeef"
