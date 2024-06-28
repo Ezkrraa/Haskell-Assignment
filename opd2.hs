@@ -25,16 +25,14 @@ import Data.Maybe (fromJust)
 -- UwU
 -- >_<
 -- xD
-euclid::Integer->Integer->Integer -- for up to half of int1, check if both divisible
+euclid :: Integer -> Integer -> Integer -- for up to half of int1, check if both divisible
 euclid a b = finddivisible a b a
 
-
-finddivisible::Integer->Integer->Integer->Integer
+finddivisible :: Integer -> Integer -> Integer -> Integer
 finddivisible a b c
   | c < 0 = -1
   | mod a c == 0 && mod b c == 0 = c
   | otherwise = finddivisible a b (c - 1)
-
 
 -- GCD (a, b) = (a × b)/ LCM(a, b)
 mygcd a b = (a * b) `div` mylcm a b
@@ -43,11 +41,11 @@ mygcd a b = (a * b) `div` mylcm a b
 mylcm a b = (a * b) `div` commonfactors a b
 
 -- We will list the factors of 30 and 42. The factors of 30 are 1, 2, 3, 5, 6, 10, 15, and 30 and the factors of 42 are 1, 2, 3, 6, 7, 14, 21, and 42.
---  Clearly, 1, 2, 3, and 6 are the common factors of 30 and 42. 
+--  Clearly, 1, 2, 3, and 6 are the common factors of 30 and 42.
 -- But 6 is the greatest of all the common factors. Hence, the HCF of 30 and 42 is 6
 
-commonfactors::Integer->Integer->Integer
-commonfactors a b = maximum [x | x <- [1..a], y <- [1..b], x == y, a `mod` x == 0, b `mod` y == 0]
+commonfactors :: Integer -> Integer -> Integer
+commonfactors a b = maximum [x | x <- [1 .. a], y <- [1 .. b], x == y, a `mod` x == 0, b `mod` y == 0]
 
 -- Opdracht 1b
 -- Gegeven de volgende congruentie:
@@ -61,7 +59,7 @@ egcd :: Integer -> Integer -> (Integer, Integer, Integer)
 egcd 0 b = (b, 0, 1)
 egcd a b =
   let (g, s, t) = egcd (b `mod` a) a
-  in (g, t - (b `div` a) * s, s)
+   in (g, t - (b `div` a) * s, s)
 
 -- Correcting negative values to be positive
 egcdPos :: Integer -> Integer -> (Integer, Integer, Integer)
@@ -69,7 +67,7 @@ egcdPos a b =
   let (g, x, y) = egcd a b
       x' = if x < 0 then x + b else x
       y' = if y < 0 then y + a else y
-  in (g, x', y')
+   in (g, x', y')
 
 -- Helaas levert dit algoritme soms een negatieve uitkomst. Gebruikt het algoritme
 -- in een eigen
@@ -87,33 +85,27 @@ egcdPos a b =
 modulus :: Integer -> Integer -> Integer
 modulus p q = p * q
 
-eulers:: Integer -> Integer -> Integer
+eulers :: Integer -> Integer -> Integer
 eulers p q = (p - 1) * (q - 1)
 
 -- Function to find the modular inverse
 modInverse :: Integer -> Integer -> Integer
 modInverse e phi =
   let (_, d, _) = egcd e phi
-  in d `mod` phi
+   in d `mod` phi
 
-  -- Generate RSA Keys
+-- Function to check if two numbers are coprime
+coprime :: Integer -> Integer -> Bool
+coprime a b = gcd a b == 1
+
+-- Generate RSA Keys
 generateRSAKeys :: Integer -> Integer -> ((Integer, Integer), (Integer, Integer))
-generateRSAKeys p q = 
+generateRSAKeys p q =
   let m = modulus p q
       phi = eulers p q
-      e = fromJust $ find (\x -> coprime x phi) [2..phi-1]
+      e = fromJust $ find (`coprime` phi) [2 .. phi - 1]
       d = modInverse e phi
-  in ((e, m), (d, m))  -- (Public Key, Private Key)
-
-
--- RSA Key Generation
--- generateRSAKeys :: Integer -> Integer -> ((Integer, Integer), (Integer, Integer))
--- generateRSAKeys p q = 
---   let m = p * q
---       phi = (p - 1) * (q - 1)
---       e = fromJust $ find (\x -> gcd x phi == 1) [2..phi-1]
---       d = fromJust $ modInv e phi
---   in ((e, m), (d, m))  -- (Public Key, Private Key)
+   in ((e, m), (d, m))
 
 -- Vervolgens kiezen we een getal e dat relatief priem is met m′. Het getal e
 -- voldoet dus aan de volgende twee voorwaarden:
@@ -132,11 +124,21 @@ generateRSAKeys p q =
 -- parameters heeft en dit getal versleutelt:
 -- rsaencrypt::(Integer,Integer)->Integer->Integer
 -- rsaencrypt (e,m) x
+
+-- RSA Encryption
+rsaEncrypt :: Integer -> (Integer, Integer) -> Integer
+rsaEncrypt msg (e, m) = (msg ^ e) `mod` m
+
 -- Opdracht 3b: rsa decryptie
 -- Schrijf een functie die een tuple van sleutel en modulus, alsmede een getal als
 -- parameters heeft en dit getal ontsleutelt:
 -- rsadecrypt::(Integer,Integer)->Integer->Integer
 -- rsadecrypt (d,m) x
+
+-- RSA Decryption
+rsaDecrypt :: Integer -> (Integer, Integer) -> Integer
+rsaDecrypt cipher (d, m) = (cipher ^ d) `mod` m
+
 -- Opdracht 4
 -- Versleutel en ontsleutel ´e´en letter m.b.v. de functies uit opdracht 3. Voor de
 -- conversie van een letter naar een ascii waarde en vice versa zijn twee handige

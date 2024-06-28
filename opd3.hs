@@ -18,10 +18,8 @@
 --  Hint 2: kies voor p een klein getal, maar niet te klein, bijv. 1
 -- 10.000
 
-differentieer::(Double->Double)->Double->Double->Double
-differentieer f p x =
-
-
+differentieer :: (Double -> Double) -> Double -> Double -> Double
+differentieer f p x = (f (x + p) - f x) / p
 
 -- Opdracht 1b : partieel parameteriseren
 -- Schrijf de functie:
