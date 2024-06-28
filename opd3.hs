@@ -8,14 +8,21 @@
 --  Partieel parameteriseren.
 --  Oefenen met diverse ingebouwde functies zoals filter, map, de fold
 -- functies, etc.
+
 -- Opdracht 1a : partieel parameteriseren
 -- Schrijf de functie:
 -- differentieer::(Double->Double)->Double->Double->Double
 -- differentieer f p x
 -- Deze functie differentieert de functie f numeriek in punt x met een precisie p.
---  Hint 1: bestudeer het differentiequoti¨ent.
+--  Hint 1: bestudeer het differentiequotient.
 --  Hint 2: kies voor p een klein getal, maar niet te klein, bijv. 1
 -- 10.000
+
+differentieer::(Double->Double)->Double->Double->Double
+differentieer f p x =
+
+
+
 -- Opdracht 1b : partieel parameteriseren
 -- Schrijf de functie:
 -- integreer::(Double->Double)->Double->Double->Double->Double
@@ -35,7 +42,7 @@
 -- dubbelen::[a]->[a]
 -- dubbelen s
 -- Deze functie heeft een lijst als invoer en levert als uitvoer een lijst met uitsluitend
--- die elementen die meer dan ´e´en keer voorkomen in de lijst. Voorbeeld:
+-- die elementen die meer dan een keer voorkomen in de lijst. Voorbeeld:
 -- ghci>dubbelen "aabbbcdeeeef"
 -- ghci>"abe"
 -- Gebruik de functies uit Data.List om bovenstaande functie op te bouwen.

@@ -83,7 +83,7 @@ worpenvan n = ([(a, b, c) | a <- [1 .. 6], b <- [1 .. 6], c <- [1 .. 6], mod (a 
 -- op een stack overflow. Zet de getallen die een stack overflow veroorzaken
 -- in het commentaar van je source.
 
-
+-- Stackoverflow: mult 1000 100000000
 mult :: Integer -> Integer -> Integer
 -- mult a b = sum [a | x <- [1..b], x <= b]
 
@@ -101,6 +101,9 @@ multHelper a b result = multHelper a (b - 1) (result + a)
 --  Deze functie vermenigvuldigt twee positieve getallen op een veel efficiëntere
 -- manier.
 --  Test je functie met dezelfde getallen als in opdracht 4a.
+
+-- fastmult lijkt geen stackoverflow te geven zelfs niet voor absurd grote getallen in de range van 1e111+
+-- 
 
 fastmult a b = fastmulthelper a b 0
 
