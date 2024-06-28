@@ -211,6 +211,7 @@ notSoEpicAttack = do
       bobPrivateKey = (2753, 3233)
       evePublicKey = (17, 3233)
       evePrivateKey = (2753, 3233)
+      -- kan dit met de keys ???
 
       message = "Hoi daar bobbertje van mij xxx"
       encryptedMessage = encryptMessage message alicePublicKey
