@@ -21,6 +21,11 @@
 differentieer :: (Double -> Double) -> Double -> Double -> Double
 differentieer f p x = (f (x + p) - f x) / p
 
+testdifferentieer :: IO ()
+testdifferentieer = do
+  let f x = x ^ 2
+  print $ differentieer f 1 2
+
 -- Opdracht 1b : partieel parameteriseren
 -- Schrijf de functie:
 -- integreer::(Double->Double)->Double->Double->Double->Double
@@ -31,6 +36,14 @@ differentieer f p x = (f (x + p) - f x) / p
 --  Hint 2: kies voor p een klein getal, maar niet te klein, bijv. 1
 -- 10.000
 -- 2
+integreer :: (Double -> Double) -> Double -> Double -> Double -> Double
+integreer f a b p = sum [f (a + i * p) * p | i <- [0 .. (b - a) / p]] -- 💀
+
+testintegreer :: IO ()
+testintegreer = do
+  let f x = x ^ 2
+  print $ integreer f 0 2 1
+
 -- Opdracht 2: werken met bibliotheken
 -- Zoek op internet naar de module Data.List. Deze is te vinden in de hackage
 -- database. Importeer deze module in je programma. Functies kunnen ook worden
