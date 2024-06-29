@@ -222,11 +222,10 @@ notSoEpicAttack = do
       encryptedMessage = encryptMessage message alicePrivateKey -- decryptable with alice's public key
       encryptedMessageToBob = sendEncryptedMessage encryptedMessage bobPublicKey -- decryptable with bob's private key
       --
-      -- eveStolenMessage = decryptMessage encryptedMessage evePublicKey -- decrypted with eves's public key
-      -- eveChangedMessage = "Hahaha ik ben een hackert"
-      -- eveEncryptedChangedMessage = encryptMessage eveChangedMessage bobPublicKey -- decryptable with bob's private key
 
-      --
+      -- man in the middle enkel mogelijk als eve de private key heeft van bob
+      -- 
+
       receivedMessageByBob = sendEncryptedMessage encryptedMessageToBob bobPrivateKey -- decrypted with bob's public key
       readableMessageByBob = decryptMessage receivedMessageByBob alicePublicKey -- decrypted with alice's public key
 
