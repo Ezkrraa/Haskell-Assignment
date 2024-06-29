@@ -203,21 +203,14 @@ epictest = do
 -- Dit garandeert zowel dat het bericht van Alice komt als dat niemand dan Bob het kan ontsleutelen.
 -- Public keys kunnen vrijelijk gedeeld worden, omdat niks met alleen de private key wordt versleuteld.
 
--- Door gebruik te maken van Symmetrische Sleutel Encryptie. Wanner de verzender een bericht wilt versturen
--- naar de ontvanger, wordt er een willekeurige sleutel gegenereerd. Deze sleutel wordt gebruikt om het bericht
--- te versleutelen. De sleutel wordt vervolgens versleuteld met de publieke sleutel van de ontvanger en meegestuurd
--- met het bericht. De ontvanger kan de versleutelde sleutel ontsleutelen met zijn prive sleutel en vervolgens het
--- bericht ontsleutelen met de verkregen sleutel.
--- In c# zou dit gedaan kunnen worden met de cryptography library met Fernet
 
--- Moeten we hier een implementatie van maken?
 
 -- Opdracht 6 (facultatief )
 -- Simuleer een man in the middle attack
 notSoEpicAttack :: IO ()
 notSoEpicAttack = do
-  let alicePublicKey = (17, 3233)
-      alicePrivateKey = (2753, 3233)
+  let alicePublicKey = (3,92971) -- p and q = 239, 389
+      alicePrivateKey = (61563,92971)
       bobPublicKey = (3, 60547) -- p and q = 191, 317
       bobPrivateKey = (40027, 60547)
       evePublicKey = (3, 97627) -- p and q = 233, 419
