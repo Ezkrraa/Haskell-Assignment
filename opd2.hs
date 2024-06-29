@@ -1,4 +1,3 @@
-import Control.Monad.RWS.Class (MonadState (put))
 import Data.Char (chr, ord)
 import Data.List (find)
 import Data.Maybe (fromJust)
@@ -158,6 +157,9 @@ encryptLetter letter (e, m) =
 encryptMessage :: String -> (Integer, Integer) -> [Integer]
 encryptMessage message (e, m) = map (`encryptLetter` (e, m)) message
 
+sendEncryptedMessage :: [Integer] -> (Integer, Integer) -> [Integer]
+sendEncryptedMessage message (d, m) = map (`rsaDecrypt` (d, m)) message
+
 --  chr
 intToChar :: Integer -> Char
 intToChar i = chr (fromInteger i)
@@ -170,6 +172,9 @@ decryptLetter encryptedLetter (d, m) =
 
 decryptMessage :: [Integer] -> (Integer, Integer) -> String
 decryptMessage message (d, m) = map (`decryptLetter` (d, m)) message
+
+decryptStringMessage :: String -> (Integer, Integer) -> String
+decryptStringMessage message (d, m) = map ((`decryptLetter` (d, m)) . charToInt) message
 
 -- Oefen met beide functies.
 
@@ -207,23 +212,41 @@ epictest = do
 notSoEpicAttack :: IO ()
 notSoEpicAttack = do
   let alicePublicKey = (17, 3233)
-      bobPublicKey = (17, 3233)
-      bobPrivateKey = (2753, 3233)
-      evePublicKey = (17, 3233)
-      evePrivateKey = (2753, 3233)
+      alicePrivateKey = (2753, 3233)
+      bobPublicKey = (3, 60547) -- p and q = 191, 317
+      bobPrivateKey = (40027, 60547)
+      evePublicKey = (3, 97627) -- p and q = 233, 419
+      evePrivateKey = (64651, 97627)
+      -- \^
       -- kan dit met de keys ???
 
       message = "Hoi daar bobbertje van mij xxx"
-      encryptedMessage = encryptMessage message alicePublicKey
+      encryptedMessage = encryptMessage message alicePrivateKey -- decryptable with alice's public key
+      encryptedMessageToBob = sendEncryptedMessage encryptedMessage bobPublicKey -- decryptable with bob's private key
+      --
+      -- eveStolenMessage = decryptMessage encryptedMessage evePublicKey -- decrypted with eves's public key
+      -- eveChangedMessage = "Hahaha ik ben een hackert"
+      -- eveEncryptedChangedMessage = encryptMessage eveChangedMessage bobPublicKey -- decryptable with bob's private key
 
-      eveStolenMessage = decryptMessage encryptedMessage evePrivateKey
-      eveChangedMessage = "Hahaha ik ben een hackert"
-      eveEncryptedChangedMessage = encryptMessage eveChangedMessage bobPublicKey
+      --
+      receivedMessageByBob = sendEncryptedMessage encryptedMessageToBob bobPrivateKey -- decrypted with bob's public key
+      readableMessageByBob = decryptMessage receivedMessageByBob alicePublicKey -- decrypted with alice's public key
 
-      -- Corrected: Bob should use his private key to decrypt the message
-      bobReadAndChangedMessage = decryptMessage eveEncryptedChangedMessage bobPrivateKey
+  --
+  --
+  --
 
+  -- Corrected: Bob should use his private key to decrypt the message
+  -- bobReadAndChangedMessage = decryptMessage eveEncryptedChangedMessage bobPublicKey -- decrypted with bob's private key
+  -- putStrLn $ "Alice sends: " ++ message
+  -- putStrLn $ "Eve reads: " ++ eveStolenMessage
+  -- putStrLn $ "Eve sends: " ++ eveChangedMessage
+  -- putStrLn $ "Bob reads: " ++ bobReadAndChangedMessage
   putStrLn $ "Alice sends: " ++ message
-  putStrLn $ "Eve reads: " ++ eveStolenMessage
-  putStrLn $ "Eve sends: " ++ eveChangedMessage
-  putStrLn $ "Bob reads: " ++ bobReadAndChangedMessage
+  print encryptedMessage
+  print encryptedMessageToBob
+  -- print eveStolenMessage
+  -- print eveChangedMessage
+  -- print eveEncryptedChangedMessage
+  print receivedMessageByBob
+  print readableMessageByBob
