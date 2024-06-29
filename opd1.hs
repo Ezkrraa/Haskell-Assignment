@@ -1,9 +1,14 @@
+{-- Students:
+ 1052307 van der Kolk, Ezra
+ 1033231 Maan, Erik
+ 1061579 Stroo, Boy
+--}
+
 import Control.Arrow (Arrow (first))
 import Data.Bits (Bits (shiftL, shiftR))
 
 -- Opdracht 1a
 -- Schrijf de functie
-
 -- Deze functie berekent de faculteit en maakt daarbij gebruik van pattern mat-ching.
 faca :: Int -> Int
 faca 0 = 1
@@ -55,12 +60,14 @@ nulpuntenb a b c
 -- de som van de ogen een veelvoud is van vijf in de lijst worden opgenomen. Hoe
 -- groot is het aantal worpen?
 
+worpenvan5 :: ([(Integer, Integer, Integer)], Int)
 worpenvan5 = ([(a, b, c) | a <- [1 .. 6], b <- [1 .. 6], c <- [1 .. 6], mod (a + b + c) 5 == 0], length (fst worpenvan5))
 
 -- Opdracht 2d
 -- Herschrijf de functie uit opdracht 2c zodanig dat de lijst van tuples een veelvoud
 -- is van n.
 
+worpenvan :: (Integral t) => t -> ([(t, t, t)], Int)
 worpenvan n = ([(a, b, c) | a <- [1 .. 6], b <- [1 .. 6], c <- [1 .. 6], mod (a + b + c) n == 0], length (fst (worpenvan n)))
 
 -- Opdracht 3
@@ -89,6 +96,7 @@ mult :: Integer -> Integer -> Integer
 
 mult a b = multHelper a b 0
 
+multHelper :: (Eq t1, Num t1, Num t2) => t2 -> t1 -> t2 -> t2
 multHelper a 0 result = result
 multHelper a b result = multHelper a (b - 1) (result + a)
 
@@ -103,10 +111,12 @@ multHelper a b result = multHelper a (b - 1) (result + a)
 --  Test je functie met dezelfde getallen als in opdracht 4a.
 
 -- fastmult lijkt geen stackoverflow te geven zelfs niet voor absurd grote getallen in de range van 1e111+
--- 
+--
 
+fastmult :: (Integral t1, Num t2) => t2 -> t1 -> t2
 fastmult a b = fastmulthelper a b 0
 
+fastmulthelper :: (Integral t1, Num t2) => t2 -> t1 -> t2 -> t2
 fastmulthelper a 0 result = result
 fastmulthelper a b result
   | odd b = fastmulthelper (a * 2) (b `div` 2) (result + a)
@@ -124,6 +134,7 @@ fastmulthelper a b result
 pow :: Integer -> Integer -> Integer
 pow x p = powHelper x p x
 
+powHelper :: (Eq t1, Num t1, Num t2) => t2 -> t1 -> t2 -> t2
 powHelper x 1 result = result
 powHelper x p result = powHelper x (p - 1) (result * x)
 
@@ -133,8 +144,10 @@ powHelper x p result = powHelper x (p - 1) (result * x)
 --  Deze functie maakt handig gebruik van bitshifting.
 --  Test je functie met dezelfde getallen als in opdracht 5a.
 
+fastPow :: (Integral t1, Bits t1, Num t2) => t2 -> t1 -> t2
 fastPow x p = fastPowHelper x p 1
 
+fastPowHelper :: (Integral t1, Num t2, Bits t1) => t2 -> t1 -> t2 -> t2
 fastPowHelper x 0 result = result
 fastPowHelper x p result
   | odd p = fastPowHelper (x * x) (p `shiftR` 1) (result * x)

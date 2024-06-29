@@ -1,3 +1,9 @@
+{-- Students:
+ 1052307 van der Kolk, Ezra
+ 1033231 Maan, Erik
+ 1061579 Stroo, boy
+--}
+
 import Control.Concurrent
 import Control.Monad (replicateM)
 import Data.List

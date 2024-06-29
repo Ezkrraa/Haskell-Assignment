@@ -1,3 +1,9 @@
+{-- Students:
+ 1052307 van der Kolk, Ezra
+ 1033231 Maan, Erik
+ 1061579 Stroo, boy
+--}
+
 import Data.Char (chr, ord)
 import Data.List (find)
 import Data.Maybe (fromJust)
@@ -6,7 +12,7 @@ import Data.Maybe (fromJust)
 -- In deze practicumopgave gaan we ons bezighouden met encryptie. We richten
 -- ons daarbij op RSA encryptie, te weten:
 --  conversie van een tekst naar de ascii waarden van die tekst
---  priv´e en publieke sleutel generatie
+--  prive en publieke sleutel generatie
 --  rsa encryptie van een bericht
 --  rsa decryptie van een bericht
 -- Aan het einde van deze opdracht ben je in staat sleutels te genereren en een
@@ -23,9 +29,6 @@ import Data.Maybe (fromJust)
 -- getallen x en y. Let op de type signature. Deze werkt met Integer, zodat je
 -- met grote getallen kunt werken als dat nodig is.
 
--- UwU
--- >_<
--- xD
 euclid :: Integer -> Integer -> Integer -- for up to half of int1, check if both divisible
 euclid a b = finddivisible a b a
 
@@ -51,7 +54,7 @@ commonfactors a b = maximum [x | x <- [1 .. a], y <- [1 .. b], x == y, a `mod` x
 -- Opdracht 1b
 -- Gegeven de volgende congruentie:
 -- e · d = 1(mod m)
--- Een dergelijke berekening is nodig voor het genereren van de publieke en priv´e
+-- Een dergelijke berekening is nodig voor het genereren van de publieke en prive
 -- sleutel. Een algoritme, waarmee de gegeven congruentie is op te lossen is het
 -- volgende:
 
@@ -115,8 +118,8 @@ generateRSAKeys p q =
 -- Zodra we een geschikt getal e gekozen hebben, moeten we een bijbehorende d
 -- berekenen. Voor d geldt:
 --  e · d = 1(mod m′)
--- We hebben nu de priv´e sleutel, de publieke sleutel en de modulus!
---  De priv´e sleutel is e
+-- We hebben nu de prive sleutel, de publieke sleutel en de modulus!
+--  De prive sleutel is e
 --  De publieke sleutel is d
 --  De modulus is m
 -- 3
@@ -141,7 +144,7 @@ rsaDecrypt :: Integer -> (Integer, Integer) -> Integer
 rsaDecrypt cipher (d, m) = (cipher ^ d) `mod` m
 
 -- Opdracht 4
--- Versleutel en ontsleutel ´e´en letter m.b.v. de functies uit opdracht 3. Voor de
+-- Versleutel en ontsleutel een letter m.b.v. de functies uit opdracht 3. Voor de
 -- conversie van een letter naar een ascii waarde en vice versa zijn twee handige
 -- functies beschikbaar, te vinden in de bibliotheek Data.Char:
 --  ord
@@ -194,7 +197,7 @@ epictest = do
 
 -- Opdracht 5
 -- Alice en Bob willen veilig met elkaar communiceren. Echter: een bericht dat
--- door Alice met haar priv´e sleutel werd versleuteld, kan door iedereen met de
+-- door Alice met haar prive sleutel werd versleuteld, kan door iedereen met de
 -- publieke sleutel worden ontsleuteld. Hoe kun je rsa gebruiken om Alice en Bob
 -- toch veilig met elkaar te laten communiceren?
 
@@ -203,47 +206,28 @@ epictest = do
 -- Dit garandeert zowel dat het bericht van Alice komt als dat niemand dan Bob het kan ontsleutelen.
 -- Public keys kunnen vrijelijk gedeeld worden, omdat niks met alleen de private key wordt versleuteld.
 
-
-
 -- Opdracht 6 (facultatief )
 -- Simuleer een man in the middle attack
 notSoEpicAttack :: IO ()
 notSoEpicAttack = do
-  let alicePublicKey = (3,92971) -- p and q = 239, 389
-      alicePrivateKey = (61563,92971)
+  let alicePublicKey = (3, 92971) -- p and q = 239, 389
+      alicePrivateKey = (61563, 92971)
       bobPublicKey = (3, 60547) -- p and q = 191, 317
       bobPrivateKey = (40027, 60547)
       evePublicKey = (3, 97627) -- p and q = 233, 419
       evePrivateKey = (64651, 97627)
-      -- \^
-      -- kan dit met de keys ???
 
       message = "Hoi daar bobbertje van mij xxx"
       encryptedMessage = encryptMessage message alicePrivateKey -- decryptable with alice's public key
       encryptedMessageToBob = sendEncryptedMessage encryptedMessage bobPublicKey -- decryptable with bob's private key
-      --
 
       -- man in the middle enkel mogelijk als eve de private key heeft van bob
-      -- 
 
       receivedMessageByBob = sendEncryptedMessage encryptedMessageToBob bobPrivateKey -- decrypted with bob's public key
       readableMessageByBob = decryptMessage receivedMessageByBob alicePublicKey -- decrypted with alice's public key
-
-  --
-  --
-  --
-
-  -- Corrected: Bob should use his private key to decrypt the message
-  -- bobReadAndChangedMessage = decryptMessage eveEncryptedChangedMessage bobPublicKey -- decrypted with bob's private key
-  -- putStrLn $ "Alice sends: " ++ message
-  -- putStrLn $ "Eve reads: " ++ eveStolenMessage
-  -- putStrLn $ "Eve sends: " ++ eveChangedMessage
-  -- putStrLn $ "Bob reads: " ++ bobReadAndChangedMessage
   putStrLn $ "Alice sends: " ++ message
-  print encryptedMessage
+  putStrLn $ "Eve reads: "
   print encryptedMessageToBob
-  -- print eveStolenMessage
-  -- print eveChangedMessage
-  -- print eveEncryptedChangedMessage
+  print encryptedMessage
   print receivedMessageByBob
   print readableMessageByBob
