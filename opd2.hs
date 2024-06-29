@@ -198,6 +198,11 @@ epictest = do
 -- publieke sleutel worden ontsleuteld. Hoe kun je rsa gebruiken om Alice en Bob
 -- toch veilig met elkaar te laten communiceren?
 
+-- Door de boodschap zowel met de private key van Alice als de public key van Bob te encrypten,
+-- is het alleen te decrypten met zowel Bob's private key als Alice's public key.
+-- Dit garandeert zowel dat het bericht van Alice komt als dat niemand dan Bob het kan ontsleutelen.
+-- Public keys kunnen vrijelijk gedeeld worden, omdat niks met alleen de private key wordt versleuteld.
+
 -- Door gebruik te maken van Symmetrische Sleutel Encryptie. Wanner de verzender een bericht wilt versturen
 -- naar de ontvanger, wordt er een willekeurige sleutel gegenereerd. Deze sleutel wordt gebruikt om het bericht
 -- te versleutelen. De sleutel wordt vervolgens versleuteld met de publieke sleutel van de ontvanger en meegestuurd
